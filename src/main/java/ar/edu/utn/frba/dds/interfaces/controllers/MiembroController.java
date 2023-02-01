@@ -27,7 +27,7 @@ public class MiembroController {
     private final FachadaUsuarios fachadaUsuarios;
 
     public MiembroController() {
-        this.repoMiembros = (RepoMiembros) FactoryRepositorio.get(Miembro.class);
+        this.repoMiembros = FactoryRepositorio.getByOutputType(RepoMiembros.class);
         this.fachadaUsuarios = new FachadaUsuarios();
     }
 

@@ -18,8 +18,8 @@ public class MedicionController {
     private Repositorio<Organizacion> repoOrganizaciones;
 
     public MedicionController(){
-        this.repoMediciones = FactoryRepositorio.get(Medicion.class);
-        this.repoOrganizaciones = FactoryRepositorio.get(Organizacion.class);
+        this.repoMediciones = FactoryRepositorio.getByParameterType(Medicion.class);
+        this.repoOrganizaciones = FactoryRepositorio.getByParameterType(Organizacion.class);
     }
 
     public String obtener(Request request, Response response) {

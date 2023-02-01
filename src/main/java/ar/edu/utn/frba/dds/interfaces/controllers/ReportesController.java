@@ -35,9 +35,9 @@ public class ReportesController {
 
     public ReportesController() {
         this.fachadaReportes = new FachadaReportes();
-        this.repoAreas = FactoryRepositorio.get(AreaSectorial.class);
-        this.repoOrganizaciones = FactoryRepositorio.get(Organizacion.class);
-        this.repoAgentes = FactoryRepositorio.get(AgenteSectorial.class);
+        this.repoAreas = FactoryRepositorio.getByParameterType(AreaSectorial.class);
+        this.repoOrganizaciones = FactoryRepositorio.getByParameterType(Organizacion.class);
+        this.repoAgentes = FactoryRepositorio.getByParameterType(AgenteSectorial.class);
     }
 
     public Object generarReporteAgente(Request request, Response response) {

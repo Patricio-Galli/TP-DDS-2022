@@ -27,8 +27,8 @@ public class BatchMedicionController {
     private final Repositorio<Organizacion> repoOrganizaciones;
 
     public BatchMedicionController(){
-        this.repoBatch = FactoryRepositorio.get(BatchMediciones.class);
-        this.repoOrganizaciones = FactoryRepositorio.get(Organizacion.class);
+        this.repoBatch = FactoryRepositorio.getByParameterType(BatchMediciones.class);
+        this.repoOrganizaciones = FactoryRepositorio.getByParameterType(Organizacion.class);
     }
 
     public List<BatchMedicionesResponse> mostrarTodos(Request request, Response response) {

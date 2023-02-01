@@ -116,7 +116,7 @@ public class EnviadorReportes {
 //        List<OrganizacionConMiembrosJSONDTO> organizacionesDTO = ParserOrganizacionesJSON.generarOrganizaciones(archOrg);
         List<OrganizacionConMiembrosJSONDTO> organizacionesDTO = new ParserJSON<>(OrganizacionConMiembrosJSONDTO.class).parseFileToCollection(archOrg);
 
-        Repositorio<Miembro> repoMiembros = FactoryRepositorio.get(Miembro.class);
+        Repositorio<Miembro> repoMiembros = FactoryRepositorio.getByParameterType(Miembro.class);
 
         for(OrganizacionConMiembrosJSONDTO organizacionDTO : organizacionesDTO){
             Organizacion unaOrg = OrganizacionMapper.toEntity(organizacionDTO);
@@ -133,7 +133,7 @@ public class EnviadorReportes {
         //List<MedioDeTransporte> mediosDeTransporte = new ArrayList<>();
 
         List<TransporteJSONDTO> transportesDTO = new ParserJSON<>(TransporteJSONDTO.class).parseFileToCollection(archTrans);
-        Repositorio<MedioDeTransporte> repoMedios = FactoryRepositorio.get(MedioDeTransporte.class);
+        Repositorio<MedioDeTransporte> repoMedios = FactoryRepositorio.getByParameterType(MedioDeTransporte.class);
 
         for(TransporteJSONDTO transporteDTO : transportesDTO){
             MedioDeTransporte unTransporte = TransportesMapper.toEntity(transporteDTO);

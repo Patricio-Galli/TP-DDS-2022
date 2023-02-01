@@ -14,10 +14,19 @@ public class Server {
     public static void main(String[] args) {
         System.out.println("HEROKU-PORT: "+getHerokuAssignedPort());
         port(getHerokuAssignedPort());
+        loadRepositories();
         loadCache();
 
         Router.init();
 //        DebugScreen.enableDebugScreen();
+    }
+
+    private static void loadRepositories() {
+        if (SystemProperties.isJpa()) {
+            FactoryRepositorio.cargarRepositoriosPersistentes();
+        } else {
+            FactoryRepositorio.cargarRepositoriosEnMemoria();
+        }
     }
 
     static int getHerokuAssignedPort() {
@@ -36,7 +45,7 @@ public class Server {
 
             AdaptadorServicioDDSTPA adapter = new AdaptadorServicioDDSTPA();
 
-            FactoryRepositorio.get(Municipio.class).buscarTodos().forEach(muni -> {
+            FactoryRepositorio.getByParameterType(Municipio.class).buscarTodos().forEach(muni -> {
                 adapter.obtenerLocalidades(muni.getIdApiDistancias())
                         .forEach(loca -> cacheLocalidades.put(loca.getNombre(),
                                 new CacheLocalidad(muni.getProvincia().getIdApiDistancias(), muni.getId(), loca.getId())));

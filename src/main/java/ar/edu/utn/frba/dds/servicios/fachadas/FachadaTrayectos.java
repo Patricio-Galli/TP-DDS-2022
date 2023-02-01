@@ -13,6 +13,7 @@ import ar.edu.utn.frba.dds.entities.transportes.Parada;
 import ar.edu.utn.frba.dds.entities.transportes.TransportePublico;
 import ar.edu.utn.frba.dds.interfaces.controllers.TramoSinDistanciaException;
 import ar.edu.utn.frba.dds.interfaces.controllers.TrayectoConMiembrosDeDistintaOrganizacionException;
+import ar.edu.utn.frba.dds.repositories.RepoFactores;
 import ar.edu.utn.frba.dds.servicios.fachadas.exceptions.NoExisteMedioException;
 import ar.edu.utn.frba.dds.interfaces.input.NuevoTrayectoDTO;
 import ar.edu.utn.frba.dds.interfaces.input.TrayectoCompartidoDTO;
@@ -38,8 +39,8 @@ public class FachadaTrayectos {
     private final FachadaUbicaciones fachadaUbicaciones;
 
     public FachadaTrayectos() {
-        this.repoMiembros = (RepoMiembros) FactoryRepositorio.get(Miembro.class);
-        this.repoTrayectos = FactoryRepositorio.get(Trayecto.class);
+        this.repoMiembros = FactoryRepositorio.getByOutputType(RepoMiembros.class);
+        this.repoTrayectos = FactoryRepositorio.getByParameterType(Trayecto.class);
         this.fachadaMedios = new FachadaMedios();
         this.fachadaUbicaciones = new FachadaUbicaciones();
     }

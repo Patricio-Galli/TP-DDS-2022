@@ -16,7 +16,7 @@ public class FactorEmisionController {
     private final RepoFactores repoFactores;
 
     public FactorEmisionController(){
-        this.repoFactores = (RepoFactores) FactoryRepositorio.get(FactorEmision.class);
+        this.repoFactores = FactoryRepositorio.getByOutputType(RepoFactores.class);
     }
 
     public FactorEmision modificar(Request request, Response response) {

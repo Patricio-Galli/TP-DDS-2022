@@ -14,7 +14,7 @@ import java.util.List;
 
 public class RepoTrayectosMemoria<T> extends RepositorioMemoria<Trayecto> {
 
-    private Repositorio<Tramo> repoTramos = FactoryRepositorio.get(Tramo.class);
+    private Repositorio<Tramo> repoTramos = FactoryRepositorio.getByParameterType(Tramo.class);
 
     public RepoTrayectosMemoria(DAOMemoria<Trayecto> dao) {
         super(dao);
@@ -22,14 +22,14 @@ public class RepoTrayectosMemoria<T> extends RepositorioMemoria<Trayecto> {
     }
 
     private void sincronizarRepos(Trayecto trayecto) {
-        Repositorio<Miembro> repoMiembros = FactoryRepositorio.get(Miembro.class);
+        Repositorio<Miembro> repoMiembros = FactoryRepositorio.getByParameterType(Miembro.class);
         trayecto.getMiembros().forEach(m -> {
             if(!repoMiembros.buscarTodos().contains(m))
                 repoMiembros.agregar(m);
         });
 
-        Repositorio<MedioDeTransporte> repoMedios = FactoryRepositorio.get(MedioDeTransporte.class);
-        Repositorio<Parada> repoParadas = FactoryRepositorio.get(Parada.class);
+        Repositorio<MedioDeTransporte> repoMedios = FactoryRepositorio.getByParameterType(MedioDeTransporte.class);
+        Repositorio<Parada> repoParadas = FactoryRepositorio.getByParameterType(Parada.class);
         List<Tramo> tramos = trayecto.getTramos();
         tramos.stream().map(Tramo::getMedioDeTransporte).forEach(mt -> {
             if(!repoMedios.buscarTodos().contains(mt))

@@ -63,8 +63,8 @@ public class TrayectosHCMiembros {
         System.out.println("Archivo de trayectos: " + ns.get("trayectos"));
         System.out.println("Archivo de transportes: " + ns.get("transportes"));
 
-        FactoryRepositorio.get(Trayecto.class).buscarTodos().forEach(System.out::println);
-        FactoryRepositorio.get(Tramo.class).buscarTodos().forEach(System.out::println);
+        FactoryRepositorio.getByParameterType(Trayecto.class).buscarTodos().forEach(System.out::println);
+        FactoryRepositorio.getByParameterType(Tramo.class).buscarTodos().forEach(System.out::println);
 
         try {
             cargarFE(ns.getString("params"));
@@ -86,7 +86,7 @@ public class TrayectosHCMiembros {
         FachadaOrganizacion fachada = new FachadaOrganizacion();
         fachada.mostrarParametros();
 
-        List<Organizacion> organizaciones = FactoryRepositorio.get(Organizacion.class).buscarTodos();
+        List<Organizacion> organizaciones = FactoryRepositorio.getByParameterType(Organizacion.class).buscarTodos();
 
         for(Organizacion org : organizaciones) {
             String razonSocial = org.getRazonSocial();
@@ -118,7 +118,7 @@ public class TrayectosHCMiembros {
     }
 
     public static void cargarOrganizaciones(String archOrg) throws IOException {
-        Repositorio<Organizacion> repoOrganizacion = FactoryRepositorio.get(Organizacion.class);
+        Repositorio<Organizacion> repoOrganizacion = FactoryRepositorio.getByParameterType(Organizacion.class);
 
         List<OrganizacionConMiembrosJSONDTO> organizacionesDTO =
                 new ParserJSON<>(OrganizacionConMiembrosJSONDTO.class).parseFileToCollection(archOrg);
@@ -152,7 +152,7 @@ public class TrayectosHCMiembros {
 
     public static void cargarTransportes(String archTrans) throws IOException {
         List<TransporteJSONDTO> transportesDTO = new ParserJSON<>(TransporteJSONDTO.class).parseFileToCollection(archTrans);
-        Repositorio<MedioDeTransporte> repoMedios = FactoryRepositorio.get(MedioDeTransporte.class);
+        Repositorio<MedioDeTransporte> repoMedios = FactoryRepositorio.getByParameterType(MedioDeTransporte.class);
 
         for(TransporteJSONDTO transporteDTO : transportesDTO){
             MedioDeTransporte unTransporte = TransportesMapper.toEntity(transporteDTO);

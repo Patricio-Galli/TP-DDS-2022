@@ -42,16 +42,16 @@ public class SetupInicialJPA {
     private final Cache<CacheLocalidad> cacheLocalidades;
 
     public SetupInicialJPA() {
-        this.repoMedios = FactoryRepositorio.get(MedioDeTransporte.class);
-        this.repoUbicaciones = FactoryRepositorio.get(UbicacionGeografica.class);
-        this.repoOrganizaciones = (RepoOrganizaciones) FactoryRepositorio.get(Organizacion.class);
-        this.repoTrayectos = FactoryRepositorio.get(Trayecto.class);
-        this.repoAreas = FactoryRepositorio.get(AreaSectorial.class);
-        this.repoAgentes = FactoryRepositorio.get(AgenteSectorial.class);
-        this.repoMiembros = FactoryRepositorio.get(Miembro.class);
-        this.repoUsuarios = FactoryRepositorio.get(User.class);
-        this.repoContactos = FactoryRepositorio.get(Contacto.class);
-        this.repoBatchMediciones = FactoryRepositorio.get(BatchMediciones.class);
+        this.repoMedios = FactoryRepositorio.getByParameterType(MedioDeTransporte.class);
+        this.repoUbicaciones = FactoryRepositorio.getByParameterType(UbicacionGeografica.class);
+        this.repoOrganizaciones = FactoryRepositorio.getByOutputType(RepoOrganizaciones.class);
+        this.repoTrayectos = FactoryRepositorio.getByParameterType(Trayecto.class);
+        this.repoAreas = FactoryRepositorio.getByParameterType(AreaSectorial.class);
+        this.repoAgentes = FactoryRepositorio.getByParameterType(AgenteSectorial.class);
+        this.repoMiembros = FactoryRepositorio.getByParameterType(Miembro.class);
+        this.repoUsuarios = FactoryRepositorio.getByParameterType(User.class);
+        this.repoContactos = FactoryRepositorio.getByParameterType(Contacto.class);
+        this.repoBatchMediciones = FactoryRepositorio.getByParameterType(BatchMediciones.class);
         this.cacheLocalidades = FactoryCache.get(CacheLocalidad.class);
     }
 
@@ -422,7 +422,7 @@ public class SetupInicialJPA {
     }
 
     public void undoSetup() {
-        RepoFactores repoFactores = (RepoFactores) FactoryRepositorio.get(FactorEmision.class);
+        RepoFactores repoFactores = FactoryRepositorio.getByOutputType(RepoFactores.class);
         this.repoUsuarios.buscarTodos().forEach(this.repoUsuarios::eliminar);
         this.repoTrayectos.buscarTodos().forEach(this.repoTrayectos::eliminar);
         this.repoMedios.buscarTodos().forEach(this.repoMedios::eliminar);
@@ -437,7 +437,7 @@ public class SetupInicialJPA {
     }
 
     private void inicializarFactores() {
-        RepoFactores repoFactores = (RepoFactores) FactoryRepositorio.get(FactorEmision.class);
+        RepoFactores repoFactores = FactoryRepositorio.getByOutputType(RepoFactores.class);
         repoFactores.agregar(new FactorEmision(new Categoria("Combustion Fija", "Gas Natural"), "m3", 1F));
         repoFactores.agregar(new FactorEmision(new Categoria("Combustion Fija", "Diesel"), "lt", 2F));
         repoFactores.agregar(new FactorEmision(new Categoria("Combustion Movil", "Gasoil"), "lt", 3F));

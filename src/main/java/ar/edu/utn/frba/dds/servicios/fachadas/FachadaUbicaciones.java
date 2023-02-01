@@ -17,10 +17,10 @@ public class FachadaUbicaciones {
     private final Repositorio<UbicacionGeografica> repoUbicaciones;
 
     public FachadaUbicaciones() {
-        this.repoAreas = FactoryRepositorio.get(AreaSectorial.class);
-        this.repoMunicipios = FactoryRepositorio.get(Municipio.class);
-        this.repoProvincias = FactoryRepositorio.get(Provincia.class);
-        this.repoUbicaciones = FactoryRepositorio.get(UbicacionGeografica.class);
+        this.repoAreas = FactoryRepositorio.getByParameterType(AreaSectorial.class);
+        this.repoMunicipios = FactoryRepositorio.getByParameterType(Municipio.class);
+        this.repoProvincias = FactoryRepositorio.getByParameterType(Provincia.class);
+        this.repoUbicaciones = FactoryRepositorio.getByParameterType(UbicacionGeografica.class);
     }
 
     public Optional<Municipio> getMunicipio(String municipio, String provincia) {

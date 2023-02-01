@@ -13,7 +13,7 @@ public class FachadaUsuarios {
     private final RepoUsuarios repoUsuarios;
 
     public FachadaUsuarios() {
-        this.repoUsuarios = (RepoUsuarios) FactoryRepositorio.get(User.class);
+        this.repoUsuarios = FactoryRepositorio.getByOutputType(RepoUsuarios.class);
     }
 
     public boolean isAuthenticated(String username, String password) {

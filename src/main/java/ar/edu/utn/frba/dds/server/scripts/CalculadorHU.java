@@ -48,7 +48,7 @@ public class CalculadorHU {
         System.out.println("Archivo de parametros: " + ns.get("params"));
 
         Map<String,Float> factoresDeEmision;
-        Repositorio<Medicion> repoMediciones = FactoryRepositorio.get(Medicion.class);
+        Repositorio<Medicion> repoMediciones = FactoryRepositorio.getByParameterType(Medicion.class);
         List<Medicion> mediciones;
         try {
             factoresDeEmision = cargarFE(ns.getString("params"));
@@ -63,7 +63,7 @@ public class CalculadorHU {
         FachadaOrganizacion calculadora = new FachadaOrganizacion();
         calculadora.cargarParametros(factoresDeEmision);
 
-        Repositorio<BatchMediciones> repoBatch = FactoryRepositorio.get(BatchMediciones.class);
+        Repositorio<BatchMediciones> repoBatch = FactoryRepositorio.getByParameterType(BatchMediciones.class);
         repoBatch.agregar(new BatchMediciones(mediciones, LocalDate.now()));
 
         Float hcOrg;

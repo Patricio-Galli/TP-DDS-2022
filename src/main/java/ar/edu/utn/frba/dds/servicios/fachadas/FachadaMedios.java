@@ -18,12 +18,12 @@ public class FachadaMedios {
     private final RepoTiposServicio repoTiposServicio;
 
     public FachadaMedios() {
-        this.repoMedios = FactoryRepositorio.get(MedioDeTransporte.class);
-        this.repoEcologicos = (RepoEcologicos) FactoryRepositorio.get(TransporteEcologico.class);
-        this.repoPublicos = (RepoPublicos) FactoryRepositorio.get(TransportePublico.class);
-        this.repoContratados = (RepoContratados) FactoryRepositorio.get(ServicioContratado.class);
-        this.repoTiposServicio = (RepoTiposServicio) FactoryRepositorio.get(TipoServicio.class);
-        this.repoParticulares = (RepoParticulares) FactoryRepositorio.get(VehiculoParticular.class);
+        this.repoMedios = FactoryRepositorio.getByParameterType(MedioDeTransporte.class);
+        this.repoEcologicos = FactoryRepositorio.getByOutputType(RepoEcologicos.class);
+        this.repoPublicos = FactoryRepositorio.getByOutputType(RepoPublicos.class);
+        this.repoContratados = FactoryRepositorio.getByOutputType(RepoContratados.class);
+        this.repoTiposServicio = FactoryRepositorio.getByOutputType(RepoTiposServicio.class);
+        this.repoParticulares = FactoryRepositorio.getByOutputType(RepoParticulares.class);
     }
 
     public Optional<MedioDeTransporte> findById(Integer id) {

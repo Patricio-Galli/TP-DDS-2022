@@ -22,7 +22,7 @@ public class FachadaOrganizacion implements FachadaOrg {
     private final RepoFactores repoFactores;
 
     public FachadaOrganizacion() {
-        repoFactores = (RepoFactores) FactoryRepositorio.get(FactorEmision.class);
+        repoFactores = FactoryRepositorio.getByOutputType(RepoFactores.class);
     }
 
     public FachadaOrganizacion(RepoFactores repoFactores) {

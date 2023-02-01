@@ -35,9 +35,9 @@ public class AgenteSectorialController {
     private final FachadaUsuarios fachadaUsuarios;
 
     public AgenteSectorialController() {
-        this.repoAgentes = FactoryRepositorio.get(AgenteSectorial.class);
-        this.repoAreas = FactoryRepositorio.get(AreaSectorial.class);
-        this.repoOrganizaciones = FactoryRepositorio.get(Organizacion.class);
+        this.repoAgentes = FactoryRepositorio.getByParameterType(AgenteSectorial.class);
+        this.repoAreas = FactoryRepositorio.getByParameterType(AreaSectorial.class);
+        this.repoOrganizaciones = FactoryRepositorio.getByParameterType(Organizacion.class);
         this.fachadaUsuarios = new FachadaUsuarios();
     }
 

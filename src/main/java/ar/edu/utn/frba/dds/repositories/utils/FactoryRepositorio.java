@@ -1,109 +1,131 @@
 package ar.edu.utn.frba.dds.repositories.utils;
 
-import ar.edu.utn.frba.dds.entities.lugares.Organizacion;
-import ar.edu.utn.frba.dds.entities.medibles.*;
-import ar.edu.utn.frba.dds.entities.medibles.BatchMediciones;
-import ar.edu.utn.frba.dds.entities.personas.AgenteSectorial;
-import ar.edu.utn.frba.dds.entities.personas.Miembro;
-import ar.edu.utn.frba.dds.entities.transportes.*;
-import ar.edu.utn.frba.dds.server.login.User;
+import ar.edu.utn.frba.dds.repositories.MiHuellaFrameworkException;
 import ar.edu.utn.frba.dds.repositories.daos.DAOHibernate;
-import ar.edu.utn.frba.dds.repositories.impl.jpa.*;
-import ar.edu.utn.frba.dds.repositories.impl.memory.*;
 import ar.edu.utn.frba.dds.repositories.Repositorio;
 import ar.edu.utn.frba.dds.repositories.impl.memory.RepositorioMemoria;
 import ar.edu.utn.frba.dds.repositories.impl.jpa.RepositorioPersistente;
 import ar.edu.utn.frba.dds.repositories.daos.DAOMemoria;
-import ar.edu.utn.frba.dds.repositories.dataInicial.memory.Data;
 import ar.edu.utn.frba.dds.server.SystemProperties;
 
-import javax.persistence.Entity;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.util.*;
 
 public class FactoryRepositorio {
-    private static HashMap<String, Repositorio> repos;
-
+    private static HashMap<Class<?>, Repositorio> repos;
 
     static {
         repos = new HashMap<>();
     }
 
-    public static <T> Repositorio<T> get(Class<T> type) {
-        return get(type, SystemProperties.isJpa());
+    public static <T> Repositorio<T> getByParameterType(Class<T> type) {
+        return (Repositorio<T>) Optional.ofNullable(repos.get(type))
+                .orElseGet(() -> SystemProperties.isJpa()
+                                ? new RepositorioPersistente<>(new DAOHibernate<>(type))
+                                : new RepositorioMemoria<>(new DAOMemoria<>(type))
+                );
     }
 
-    public static <T> Repositorio<T> get(Class<T> type, boolean isJPA) {
-        Repositorio<T> repo;
-        if(repos.containsKey(type.getName())){
-            repo = (Repositorio<T>) repos.get(type.getName());
+    public static <T, P> P get(Class<T> type, Class<P> outputType) {
+        try {
+            return outputType.cast(Objects.requireNonNull(repos.get(type)));
+        } catch (NullPointerException e) {
+            throw new MiHuellaFrameworkException("The class " + outputType.getName() + " could not be get from context.");
         }
-        else{
-            if(!isJPA) {
-                if(type.equals(Organizacion.class)) {
-                    repo = new RepoOrganizacionesMemoria(new DAOMemoria<>(Organizacion.class, Data.getDataOrganizacion()));
-                } else if(type.equals(Medicion.class)) {
-                    repo = new RepositorioMemoria<>(new DAOMemoria<>(type, Data.getDataMedicion()));
-                } else if(type.equals(BatchMediciones.class)) {
-                    repo = new RepositorioMemoria<>(new DAOMemoria<>(type, Data.getDataBatchMedicion()));
-                } else if(type.equals(Miembro.class)) {
-                    repo = new RepoMiembrosMemoria(new DAOMemoria<>(Miembro.class, Data.getDataMiembro()));
-                } else if(type.equals(FactorEmision.class)) {
-                    repo = new RepoFactoresMemoria(new DAOMemoria<>(FactorEmision.class, Data.getDataFactorEmision()));
-                } else if(type.equals(Categoria.class)) {
-                    repo = new RepositorioMemoria<>(new DAOMemoria<T>(type, (List<T>) Data.getDataCategorias()));
-                } else if(type.equals(AgenteSectorial.class)) {
-                    repo = new RepositorioMemoria<>(new DAOMemoria<>(type, Data.getDataAgenteSectorial()));
-                } else if(type.equals(Trayecto.class)) {
-                    repo = new RepoTrayectosMemoria(new DAOMemoria<>(Trayecto.class, Data.getDataTrayecto()));
-                } else if(type.equals(TransporteEcologico.class)) {
-                    repo = new RepoEcologicosMemoria(new DAOMemoria<>(TransporteEcologico.class));
-                } else if(type.equals(TransportePublico.class)) {
-                    repo = new RepoPublicosMemoria(new DAOMemoria<>(TransportePublico.class));
-                } else if(type.equals(ServicioContratado.class)) {
-                    repo = new RepoContratadosMemoria(new DAOMemoria<>(ServicioContratado.class));
-                } else if(type.equals(VehiculoParticular.class)) {
-                    repo = new RepoParticularesMemoria(new DAOMemoria<>(VehiculoParticular.class));
-                } else if(type.equals(TipoServicio.class)) {
-                    repo = new RepoTiposServicioMemoria(new DAOMemoria<>(TipoServicio.class));
-                } else if(type.equals(User.class)) {
-                    repo = new RepoUsuariosMemoria(new DAOMemoria<>(User.class));
-                } else {
-                    repo = new RepositorioMemoria<>(new DAOMemoria<>(type));
-                }
-            } else {
-                if(type.isAnnotationPresent(Entity.class)) {
-                    if(type.equals(Organizacion.class)) {
-                        repo = new RepoOrganizacionesJPA(new DAOHibernate<>(type));
-                    } else if (type.equals(FactorEmision.class)) {
-                        repo = new RepoFactoresJPA(new DAOHibernate<>(type));
-                    } else if (type.equals(Miembro.class)) {
-                        repo = new RepoMiembrosJPA(new DAOHibernate<>(type));
-                    } else if(type.equals(TransporteEcologico.class)) {
-                        repo = new RepoEcologicosJPA(new DAOHibernate<>(TransporteEcologico.class));
-                    } else if(type.equals(TransportePublico.class)) {
-                        repo = new RepoPublicosJPA(new DAOHibernate<>(TransportePublico.class));
-                    } else if(type.equals(ServicioContratado.class)) {
-                        repo = new RepoContratadosJPA(new DAOHibernate<>(ServicioContratado.class));
-                    } else if(type.equals(VehiculoParticular.class)) {
-                        repo = new RepoParticularesJPA(new DAOHibernate<>(VehiculoParticular.class));
-                    } else if(type.equals(TipoServicio.class)) {
-                        repo = new RepoTiposServicioJPA(new DAOHibernate<>(TipoServicio.class));
-                    } else if(type.equals(User.class)) {
-                        repo = new RepoUsuariosJPA(new DAOHibernate<>(User.class));
-                    } else {
-                        repo = new RepositorioPersistente<>(new DAOHibernate<>(type));
-                    }
-                }
-                else {
-                    repo = new RepositorioMemoria<>(new DAOMemoria<>(type, new ArrayList<>()));
-                }
+    }
+
+    public static <P> P getByOutputType(Class<P> outputType) {
+        return repos.values().stream()
+                .filter(repositorio -> repositorio.getClass().equals(outputType) ||
+                        Arrays.asList(repositorio.getClass().getInterfaces()).contains(outputType))
+                .map(outputType::cast)
+                .findFirst().orElseThrow(() -> new MiHuellaFrameworkException("The class " + outputType.getName()
+                        + " could not be get from context."));
+    }
+
+    public static <T> List<Class<? extends T>> getClasses(String packageName, Class<T> inheritedType) {
+        List<Class<? extends T>> result = new ArrayList<>();
+        ArrayList<Class<?>> classes = new ArrayList<>();
+        try {
+            classes = getClasses(packageName);
+        } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
+        }
+        for (Class<?> next : classes) {
+            Class<?> superClass = next.getSuperclass();
+            while (!superClass.equals(Object.class)) {
+                if (superClass.equals(inheritedType))
+                    result.add((Class<? extends T>) next);
+                superClass = superClass.getSuperclass();
             }
+        }
+        return result;
+    }
 
-            repos.put(type.getName(), repo);
+    public static ArrayList<Class<?>> getClasses(String packageName) throws ClassNotFoundException, IOException {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        assert classLoader != null;
+        String path = packageName.replace('.', '/');
+        Enumeration<URL> resources = classLoader.getResources(path);
+        List<File> dirs = new ArrayList<>();
+        while (resources.hasMoreElements()) {
+            URL resource = resources.nextElement();
+            dirs.add(new File(resource.getFile()));
+        }
+        ArrayList<Class<?>> classes = new ArrayList<>();
+        for (File directory : dirs) {
+            classes.addAll(findClasses(directory, packageName));
         }
 
-        return repo;
+        return classes;
+    }
+
+    public static List<Class<?>> findClasses(File directory, String packageName) throws ClassNotFoundException {
+        List<Class<?>> classes = new ArrayList<>();
+        if (!directory.exists()) {
+            return classes;
+        }
+        File[] files = directory.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                assert !file.getName().contains(".");
+                classes.addAll(findClasses(file, packageName + "." + file.getName()));
+            } else if (file.getName().endsWith(".class")) {
+                classes.add(Class
+                        .forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6)));
+            }
+        }
+        return classes;
+    }
+
+    public static void cargarRepositoriosEnMemoria() {
+        getClasses("ar.edu.utn.frba.dds.repositories.impl.memory", RepositorioMemoria.class)
+                .forEach(inter -> {
+                    String className = inter.getGenericSuperclass().getTypeName().split("<")[1];
+                    try {
+                        Class<?> key = Class.forName(className.substring(0, className.length() - 1));
+                        repos.put(key, inter.getConstructor(DAOMemoria.class).newInstance(new DAOMemoria<>(key)));
+                    } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
+                             IllegalAccessException | NoSuchMethodException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+    }
+
+    public static void cargarRepositoriosPersistentes() {
+        getClasses("ar.edu.utn.frba.dds.repositories.impl.jpa", RepositorioPersistente.class)
+                .forEach(inter -> {
+                    String className = inter.getGenericSuperclass().getTypeName().split("<")[1];
+                    try {
+                        Class<?> key = Class.forName(className.substring(0, className.length() - 1));
+                        repos.put(key, inter.getConstructor(DAOHibernate.class).newInstance(new DAOHibernate<>(key)));
+                    } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
+                             IllegalAccessException | NoSuchMethodException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
     }
 }

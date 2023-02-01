@@ -22,10 +22,10 @@ public class FachadaOrganizacionApi {
     private final RepoMiembros repoMiembros;
 
     public FachadaOrganizacionApi() {
-        this.repoClasificaciones = FactoryRepositorio.get(ClasificacionOrganizacion.class);
-        this.repoMunicipios = FactoryRepositorio.get(Municipio.class);
-        this.repoMiembros = (RepoMiembros) FactoryRepositorio.get(Miembro.class);
-        this.repoOrganizaciones = (RepoOrganizaciones) FactoryRepositorio.get(Organizacion.class);
+        this.repoClasificaciones = FactoryRepositorio.getByParameterType(ClasificacionOrganizacion.class);
+        this.repoMunicipios = FactoryRepositorio.getByParameterType(Municipio.class);
+        this.repoMiembros = FactoryRepositorio.getByOutputType(RepoMiembros.class);
+        this.repoOrganizaciones = FactoryRepositorio.getByOutputType(RepoOrganizaciones.class);
     }
 
     public Organizacion agregar(OrganizacionJSONDTO orgRequest) {

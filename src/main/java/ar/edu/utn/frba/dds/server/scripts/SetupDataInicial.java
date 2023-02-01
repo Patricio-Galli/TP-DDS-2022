@@ -32,7 +32,7 @@ public class SetupDataInicial {
 
         Periodo periodo = new Periodo(2022);
 
-        RepoOrganizaciones repoOrganizaciones = (RepoOrganizaciones) FactoryRepositorio.get(Organizacion.class);
+        RepoOrganizaciones repoOrganizaciones = FactoryRepositorio.getByOutputType(RepoOrganizaciones.class);
 
         FachadaReportes fachadaReportes = new FachadaReportes();
 

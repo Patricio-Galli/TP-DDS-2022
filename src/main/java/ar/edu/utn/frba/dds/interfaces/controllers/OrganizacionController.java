@@ -30,8 +30,8 @@ public class OrganizacionController {
     private final FachadaUsuarios fachadaUsuarios;
 
     public OrganizacionController() {
-        this.repoOrganizaciones = FactoryRepositorio.get(Organizacion.class);
-        this.repoMiembros = (RepoMiembros) FactoryRepositorio.get(Miembro.class);
+        this.repoOrganizaciones = FactoryRepositorio.getByParameterType(Organizacion.class);
+        this.repoMiembros = FactoryRepositorio.getByOutputType(RepoMiembros.class);
         this.fachadaOrganizacion = new FachadaOrganizacionApi();
         this.fachadaUsuarios = new FachadaUsuarios();
     }
