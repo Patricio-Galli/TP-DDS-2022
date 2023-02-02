@@ -23,9 +23,9 @@ public class Server {
 
     private static void loadRepositories() {
         if (SystemProperties.isJpa()) {
-            FactoryRepositorio.cargarRepositoriosPersistentes();
+            FactoryRepositorio.cargarRepositoriosPersistentes(SystemProperties.getRepositoryPath() + ".jpa");
         } else {
-            FactoryRepositorio.cargarRepositoriosEnMemoria();
+            FactoryRepositorio.cargarRepositoriosEnMemoria(SystemProperties.getRepositoryPath() + ".memory");
         }
     }
 
@@ -51,7 +51,5 @@ public class Server {
                                 new CacheLocalidad(muni.getProvincia().getIdApiDistancias(), muni.getId(), loca.getId())));
             });
         }
-
     }
-
 }

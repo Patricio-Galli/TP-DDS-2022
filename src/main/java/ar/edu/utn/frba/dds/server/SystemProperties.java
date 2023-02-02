@@ -1,6 +1,5 @@
 package ar.edu.utn.frba.dds.server;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -20,6 +19,7 @@ public class SystemProperties {
     private static final String staticDomainPath;
     private static final String staticAbsolutePath;
     private static final String apiUrl;
+    private static final String repositoryPath;
 
     static {
         Map<String, String> varEntorno = System.getenv();
@@ -41,11 +41,12 @@ public class SystemProperties {
         calculadoraDistanciasToken = varEntorno.getOrDefault("client_calculadora_distancias_api_token",
                 propArchivo.getProperty("client_calculadora_distancias_api_token", ""));
         localhost = varEntorno.getOrDefault("localhost", propArchivo.getProperty("localhost", "true")).equals("true");
-        staticRelativePath = varEntorno.getOrDefault("static_path_relative", propArchivo.getProperty("static_path_relative","/public"));
+        staticRelativePath = varEntorno.getOrDefault("static_path_relative", propArchivo.getProperty("static_path_relative", "/public"));
         staticBasePath = varEntorno.getOrDefault("static_path_base", propArchivo.getProperty("static_path_base", "/src/main/resources"));
         staticDomainPath = varEntorno.getOrDefault("static_path_domain", propArchivo.getProperty("static_path_domain", System.getProperty("user.dir")));
         staticAbsolutePath = varEntorno.getOrDefault("static_path_absolute", propArchivo.getProperty("static_path_absolute", staticDomainPath + staticBasePath + staticRelativePath));
         apiUrl = varEntorno.getOrDefault("api_url", propArchivo.getProperty("api_url", "https://app.swaggerhub.com/apis-docs/SebasCafiero/dds-mano-g06/2.0"));
+        repositoryPath = varEntorno.getOrDefault("mihuella_framework_repository_path", propArchivo.getProperty("mihuella_framework_repository_path", "ar.edu.utn.frba.dds.repositories.impl"));
     }
 
     public static Boolean isJpa() {
@@ -96,6 +97,10 @@ public class SystemProperties {
         return staticDomainPath;
     }
 
+    public static String getRepositoryPath() {
+        return repositoryPath;
+    }
+
     public static String getApiUrl() {
         return apiUrl;
     }
@@ -109,7 +114,7 @@ public class SystemProperties {
             FileReader file = new FileReader(path);
             propiedades.load(file);
 
-            System.out.println("aplication.properties: "+propiedades);
+            System.out.println("aplication.properties: " + propiedades);
 
             file.close();
         } catch (FileNotFoundException e) {
