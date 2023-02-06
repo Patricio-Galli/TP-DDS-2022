@@ -31,11 +31,12 @@ public class FactoryClassLoader {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         assert classLoader != null;
         String path = packageName.replace('.', '/');
-        String helper = new File(path).getAbsolutePath();
+//        String helper = new File(path).getAbsolutePath();
 //        String path = packageName;
 //        File currentDirFile = new File(packageName);
 //        String helper = currentDirFile.getAbsolutePath();
 //        String currentDir = helper.substring(0, helper.length() - currentDirFile.getCanonicalPath().length());//this line may need a try-catch block
+
         Enumeration<URL> resources = classLoader.getResources(path);
         List<File> dirs = new ArrayList<>();
         while (resources.hasMoreElements()) {
@@ -43,7 +44,9 @@ public class FactoryClassLoader {
             dirs.add(new File(resource.getFile()));
         }
 
-        return dirs.stream().flatMap(directory -> findClasses(directory, packageName).stream())
+        return dirs.stream()
+                .filter(directory -> !directory.getAbsolutePath().contains("test-classes"))
+                .flatMap(directory -> findClasses(directory, packageName).stream())
                 .collect(Collectors.toList());
     }
 

@@ -5,9 +5,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Collection;
 import java.util.List;
 
 public class ParserJSON<T, S> {
@@ -29,7 +27,7 @@ public class ParserJSON<T, S> {
     }
 
     public List<S> parseCollection(String json) {
-        Type listType = TypeToken.getParameterized(List.class, subtype).getType();
+        Type listType = TypeToken.getParameterized(type, subtype).getType();
         return new Gson().fromJson(json, listType);
     }
 
